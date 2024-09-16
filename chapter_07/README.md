@@ -1,4 +1,4 @@
-# Relationships
+# Security and Optimization
 
 Practioners use tools such as dbdiagram.io, LucidChart, or MySQL Workbench to create and edit E-R diagrams.
 
@@ -6,11 +6,12 @@ The corresponding chapter in this book developed the entities and their attribut
 
 - [View or edit the E-R diagram via dbdiagram](#view-or-edit-the-e-r-diagram-via-dbdiagram)
 - [View or edit the E-R diagram via MySQL Workbench](#view-or-edit-the-e-r-diagram-via-mysql-workbench)
-- [Modifications to attributes for different RDBMS](#modifications-to-attributes-for-different-rdbms)
 
-The final state of entities as described in Chapter 5 is as follows:
+The final state of entities as described in Chapter 7 is as follows:
 
-<img src="./images/er-diagram.png" alt="e-r-diagram" style="width:'70%';">
+<!-- <img src="./images/dbdiagram.png" alt="dbdiagram" style="width:'50%';"> -->
+
+<img src="./images/er-diagram.png" alt="e-r-diagram" style="width:'50%';">
 
 ## View or edit the E-R diagram via dbdiagram
 
@@ -41,7 +42,7 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-winx64.msi` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters and do not need to on this one).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
 6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
 
 ### Linux
@@ -50,7 +51,7 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-1.el8.x86_64.rpm` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters and do not need to on this one).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
 6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
 
 ### Mac
@@ -59,7 +60,7 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-macos-x86_64.dmg` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
 6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
 
 ## Modifications to attributes for different RDBMS
@@ -74,26 +75,32 @@ The entities and attributes depicted in the E-R diagram don't require any modifi
 
 The following changes need to be made for SQL Server:
 
-* `TIMESTAMP` to `DATETIMEOFFSET`
-* `VARCHAR` to `NVARCHAR`
-* `TEXT` to `NVARCHAR(MAX)`
-
 **`TIMESTAMP` to `DATETIMEOFFSET`**:  SQL Server uses DATETIMEOFFSET instead of TIMESTAMP. DATETIMEOFFSET stores the date, time, and offset from UTC. DATETIMEOFFSET is a SQL Server-specific data type that is not part of the ANSI SQL standard. DATETIMEOFFSET is used when you need to store the time zone offset of a particular date and time value.
 
 **`VARCHAR` to `NVARCHAR`**: It is recommended to use `NVARCHAR` instead of `VARCHAR` for SQL Server. `VARCHAR` is used for non-Unicode character data. It stores ASCII characters and can represent a limited set of characters (specifically those in the code page of your server's collation setting). `NVARCHAR` is used for Unicode character data -- It can store characters from multiple languages and alphabets and uses two bytes per character.If your application needs to support multiple languages or special characters that are not represented in the default character set, then you should use `NVARCHAR`.
 
 **`TEXT` to `NVARCHAR(MAX)`**: `TEXT` is a deprecated data type in SQL Server. It is recommended to use `NVARCHAR(MAX)` instead of `TEXT`. `NVARCHAR(MAX)` is used for Unicode character data of variable length. `NVARCHAR(MAX)` can store up to 2GB of data. `NVARCHAR(MAX)` is a SQL Server-specific data type that is not part of the ANSI SQL standard. `NVARCHAR(MAX)` is used when you need to store large amounts of Unicode character data (more than 4000 characters).
 
+**`AUTO_INCREMENT` to `IDENTITY`**: `IDENTITY` the name used for `AUTO_INCREMENT` in SQL Server. The effect is the same.
+
+**`CURRENT_TIMESTAMP` to `GETDATE()`**: The function name is different but the use is exactly the same.
+
+**`VISIBLE` is  not necessary**: It is the default for SQL server so it is ommitted from the create table statement.
+
 ### SQLite
 
 The following changes need to be made for SQLite:
-
-* `TIMESTAMP` to `TEXT`
-* `CHAR` and `VARCHAR` to `TEXT`
-* `DECIMAL` to `INT` or `TEXT`
 
 **`TIMESTAMP` to `TEXT`**: SQLite doesn't support the `TIMESTAMP` data type. It is recommended to use `TEXT` instead of `TIMESTAMP` for SQLite.
 
 **`CHAR` and `VARCHAR` to `TEXT`**: `CHAR` and `VARCHAR` are the same as `TEXT` in SQLite, and all of which have no length limit in SQLite.
 
 **`DECIMAL` to `INT` or `TEXT`**: SQLite doesn't support `DECIMAL` data type. `REAL` is typically used instead of `DECIMAL` in SQLite when precision doesn't matter. When precision matters, `INT` or `TEXT` are typically used in practice for decimal numbers.
+
+**Character encodings not supported**: SQLite uses UTF-8 by default.
+
+**`AUTO_INCREMENT` to `INTEGER PRIMARY KEY`**: As long as a column is a primary key and integer the auto-incrementing effect is automatic.
+
+**`VISIBLE` is  not necessary**: It is the default for SQLite so it is ommitted from the create table statement.
+
+**`CURRENT_TIMESTAMP` to `datetime('now')`**: Use is exactly the same just the syntax is different.

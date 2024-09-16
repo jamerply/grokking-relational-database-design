@@ -1,16 +1,19 @@
-# Relationships
+# Database Design in the Age of Generative AI
 
 Practioners use tools such as dbdiagram.io, LucidChart, or MySQL Workbench to create and edit E-R diagrams.
 
 The corresponding chapter in this book developed the entities and their attributes for the database of The Sci-fi Collective. You can find the developed entities and their relationships, as well as how to load (or check) them using corresponding tools.
 
 - [View or edit the E-R diagram via dbdiagram](#view-or-edit-the-e-r-diagram-via-dbdiagram)
-- [View or edit the E-R diagram via MySQL Workbench](#view-or-edit-the-e-r-diagram-via-mysql-workbench)
-- [Modifications to attributes for different RDBMS](#modifications-to-attributes-for-different-rdbms)
+<!-- - [View or edit the E-R diagram via MySQL Workbench](#view-or-edit-the-e-r-diagram-via-mysql-workbench) -->
 
-The final state of entities as described in Chapter 5 is as follows:
+The final state of entities as described in Chapter 8 is as follows:
 
-<img src="./images/er-diagram.png" alt="e-r-diagram" style="width:'70%';">
+<img src="./images/dbdiagram.png" alt="dbdiagram" style="width:'50%';">
+
+<!-- <img src="./images/er-diagram.png" alt="e-r-diagram" style="width:'70%';"> -->
+
+The questions/requests used to generate ChatGPT responses can be found in <a href="./chatgpt_request.md">chatgpt_requests.md</a>.
 
 ## View or edit the E-R diagram via dbdiagram
 
@@ -41,7 +44,7 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-winx64.msi` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters and do not need to on this one).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
 6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
 
 ### Linux
@@ -50,7 +53,7 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-1.el8.x86_64.rpm` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters and do not need to on this one).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
 6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
 
 ### Mac
@@ -59,8 +62,8 @@ There are extensive tutorials for how to use MySQL Workbench for Database Design
 2. Download the `mysql-workbench-community-8.0.33-macos-x86_64.dmg` file from "Other Downloads" section. The Download button is to the right. Make sure to download this file since if you download the MySQL Installer it will also install MySQL on your system (which we assume you already have installed from previous chapters).
 3. Follow the installation instructions from the installer.
 4. Once installed, double-click on the file or use File -> Open Model ... from within MySQL Workbench.
-5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 5.
-6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes.
+5. The file (`workbench.mwb`) is a MySQL Workbench Document that allows you to edit entity relationship diagrams and generate SQL CREATE TABLE statements based on these diagrams. The current file contains all entities as described in their final state in Chapter 7.
+6. Once you see the entities you can freely double-click and evaluate them as well as make any necessary changes. 
 
 ## Modifications to attributes for different RDBMS
 
@@ -68,32 +71,62 @@ You will need to make some modifications to the attributes for different RDBMS. 
 
 ### MySQL, MariaDB, and PostgreSQL
 
-The entities and attributes depicted in the E-R diagram don't require any modifications for MySQL, MariaDB, and PostgreSQL.
+The entities and attributes depicted in the E-R diagram don't require any modifications for MySQL and MariaDB.
+
+### PostgreSQL
+
+The following changes need to be made for PostgreSQL:
+
+**Replace `INT AUTO_INCREMENT` with `SERIAL`**: PostgreSQL uses `SERIAL` for auto-incrementing integer columns.
+
+**Change `YEAR` to `SMALLINT`**: PostgreSQL doesn't have a specific `YEAR` type. `SMALLINT` is typically used for year values.
+
+**Consider using `TEXT` instead of `VARCHAR`**: While PostgreSQL supports `VARCHAR`, `TEXT` is often preferred as it has no length limit.
+
+**Replace `NUMERIC` with `DECIMAL`**: PostgreSQL supports both `NUMERIC` and `DECIMAL` as synonyms, but `DECIMAL` is more commonly used.
+
+**Adjust `CHECK` constraints**: The syntax is slightly different in PostgreSQL, but the concept remains the same.
+
+**Modify foreign key constraint syntax**: While the concept is the same, the syntax for defining foreign key constraints might need slight adjustments for PostgreSQL.
 
 ### SQL Server
 
 The following changes need to be made for SQL Server:
 
-* `TIMESTAMP` to `DATETIMEOFFSET`
-* `VARCHAR` to `NVARCHAR`
-* `TEXT` to `NVARCHAR(MAX)`
+**Change `INT AUTO_INCREMENT` to `INT IDENTITY(1,1)`**: SQL Server uses `IDENTITY(1,1)` for auto-incrementing columns.
 
-**`TIMESTAMP` to `DATETIMEOFFSET`**:  SQL Server uses DATETIMEOFFSET instead of TIMESTAMP. DATETIMEOFFSET stores the date, time, and offset from UTC. DATETIMEOFFSET is a SQL Server-specific data type that is not part of the ANSI SQL standard. DATETIMEOFFSET is used when you need to store the time zone offset of a particular date and time value.
+**Change `VARCHAR` to `NVARCHAR`**: While `VARCHAR` exists in SQL Server, `NVARCHAR` is generally preferred for better Unicode support.
 
-**`VARCHAR` to `NVARCHAR`**: It is recommended to use `NVARCHAR` instead of `VARCHAR` for SQL Server. `VARCHAR` is used for non-Unicode character data. It stores ASCII characters and can represent a limited set of characters (specifically those in the code page of your server's collation setting). `NVARCHAR` is used for Unicode character data -- It can store characters from multiple languages and alphabets and uses two bytes per character.If your application needs to support multiple languages or special characters that are not represented in the default character set, then you should use `NVARCHAR`.
+**Change `CHAR` to `NCHAR`**: For fixed-length character fields, use `NCHAR` in SQL Server for Unicode support.
 
-**`TEXT` to `NVARCHAR(MAX)`**: `TEXT` is a deprecated data type in SQL Server. It is recommended to use `NVARCHAR(MAX)` instead of `TEXT`. `NVARCHAR(MAX)` is used for Unicode character data of variable length. `NVARCHAR(MAX)` can store up to 2GB of data. `NVARCHAR(MAX)` is a SQL Server-specific data type that is not part of the ANSI SQL standard. `NVARCHAR(MAX)` is used when you need to store large amounts of Unicode character data (more than 4000 characters).
+**Change `NUMERIC` to `DECIMAL`**: While SQL Server supports both `NUMERIC` and `DECIMAL`, `DECIMAL` is more commonly used.
+
+**Change `YEAR` to `SMALLINT`**: SQL Server doesn't have a specific `YEAR` type. `SMALLINT` is typically used for year values.
+
+**Adjust `CHECK` constraints**: The syntax is slightly different in SQL Server, but the concept remains the same.
+
+**Modify foreign key constraint syntax**: While the concept is the same, the syntax for defining foreign key constraints is slightly different in SQL Server.
 
 ### SQLite
 
 The following changes need to be made for SQLite:
 
-* `TIMESTAMP` to `TEXT`
-* `CHAR` and `VARCHAR` to `TEXT`
-* `DECIMAL` to `INT` or `TEXT`
+**Character encodings not supported**: SQLite uses UTF-8 by default.
 
-**`TIMESTAMP` to `TEXT`**: SQLite doesn't support the `TIMESTAMP` data type. It is recommended to use `TEXT` instead of `TIMESTAMP` for SQLite.
+**Remove `AUTO_INCREMENT`**: SQLite doesn't support `AUTO_INCREMENT`. Instead, you can use `INTEGER PRIMARY KEY` which will auto-increment automatically.
 
-**`CHAR` and `VARCHAR` to `TEXT`**: `CHAR` and `VARCHAR` are the same as `TEXT` in SQLite, and all of which have no length limit in SQLite.
+**Change `INT` to `INTEGER`**: While SQLite will usually accept `INT`, it's best practice to use `INTEGER`.
 
-**`DECIMAL` to `INT` or `TEXT`**: SQLite doesn't support `DECIMAL` data type. `REAL` is typically used instead of `DECIMAL` in SQLite when precision doesn't matter. When precision matters, `INT` or `TEXT` are typically used in practice for decimal numbers.
+**Change `CHAR` to `TEXT`**: SQLite doesn't have a `CHAR` type. Use `TEXT` instead.
+
+**Change `VARCHAR` to `TEXT`**: SQLite doesn't have a `VARCHAR` type. Use `TEXT` instead.
+
+**Change `NUMERIC` to `REAL`**: For floating-point numbers, use `REAL` in SQLite.
+
+**Remove `YEAR` type**: SQLite doesn't have a specific `YEAR` type. Use `INTEGER` instead.
+
+**Remove size specifications**: SQLite doesn't use size specifications for text fields (e.g., `VARCHAR(100)` becomes just `TEXT`).
+
+**Adjust `CHECK` constraints**: The syntax is slightly different in SQLite. You'll need to wrap the condition in parentheses.
+
+**Adjust foreign key constraints**: SQLite supports foreign key constraints, but the syntax is slightly different and you need to enable foreign key support explicitly.
