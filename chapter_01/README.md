@@ -1,6 +1,23 @@
 # Introduction to databases and SQL
 
-The scripts that you can use to create databases/tables for this chapter are all contained in this folder. We will describe a few approaches to load the prepared scripts using different RDBMS and tools.
+The SQL code snippets covered in this chapter are all contained in this folder. The SQL code snippets covered in this chapter work perfectly with MySQL, MariaDB, SQLite, and PostgreSQL. 
+
+If you are using SQL Server, you should refer to the SQL script contained in this folder and pay attention to the following differences that were made to make the script compatible with SQL Server:
+
+* `NVARCHAR(MAX)` was used instead of `TEXT`: SQL Server doesn't support `TEXT` data type.
+* Data insertion of string values was changed from `'...'` to `N'...'`: SQL Server requires the `N` prefix for string values, e.g., `N'Apple'`. SQL Server uses the UCS-2 encoding for string values, which is a subset of UTF-16. The `N` prefix tells SQL Server to use UTF-16 encoding for the string value.
+
+If you are using SQLite database, you should refer to the SQL script contained in this folder and pay attention to the following differences that were made to make the script compatible with SQLite database:
+
+* `TEXT` was used instead of `VARCHAR`: `VARCHAR` is the same as `TEXT` and has no length limit in SQLite.
+* `TEXT` was used instead of `DECIMAL`: SQLite doesn't support `DECIMAL` data type. `REAL` is typically used instead of `DECIMAL` in SQLite when precision doesn't matter. When precision matters, `TEXT` is typically used in practice instead of `DECIMAL` in SQLite.
+
+<!-- If you are using Oracle database, you should refer to the SQL script contained in this folder and pay attention to the following differences that were made to make the script compatible with Oracle database:
+
+* `VARCHAR2` was used instead of `TEXT`: Oracle database doesn't support `TEXT` data type.
+* `NUMBER` was used instead of `INT` and `DECIMAL`: Oracle database doesn't support `INT` or `DECIMAL` data types. -->
+
+How to load the prepared scripts using different RDBMS and tools are covered in the following subsections.
 
 - [SQLite online](#sqlite-online)
 - [SQLite database](#sqlite-database)
@@ -18,6 +35,16 @@ The scripts that you can use to create databases/tables for this chapter are all
     - [Install and start PostgreSQL on Windows](#install-and-start-postgresql-on-windows)
     - [Install and start PostgreSQL on Linux](#install-and-start-postgresql-on-linux)
     - [Load the prepared PostgreSQL script](#load-the-prepared-postgresql-script)
+- [SQL Server database](#sql-server)
+    - [Install and start SQL server on Mac](#install-and-start-sql-server-on-mac)
+    - [Install and start SQL server on Windows](#install-and-start-sql-server-on-windows)
+    - [Install and start SQL server on Linux](#install-and-start-sql-server-on-linux)
+    - [Load the prepared SQL server script](#load-the-prepared-sql-server-script)
+- [Oracle database](#oracle-database)
+    - [Install and start Oracle database on Mac or Linux](#install-and-start-oracle-database-on-mac-or-linux)
+    - [Install and start Oracle database on Windows](#install-and-start-oracle-database-on-windows)
+    - [Load the prepared Oracle script](#load-the-prepared-oracle-script)
+
 
 ## SQLite online
 
@@ -72,7 +99,7 @@ If you are using a Linux, you can download the ZIP file for Linux from [SQLite w
 The script prepared for SQLite database is [`sqlite_db.sql`](./sqlite_db.sql). You can load the prepared script by:
 
 1. Open the terminal, navigate into the `chapter_01` folder of this repository
-2. Run the following command, and you will be in the SQLite console environment:
+2. Run the following command to create a new database named `onlinestore.db`, and you will be in the SQLite console environment:
 
 ```
 sqlite3 onlinestore.db
@@ -154,7 +181,7 @@ service mysql stop
 
 ### Load the prepared MySQL script
 
-The script prepared for MySQL database is [`mysql_db.sql`](./mysql_db.sql). You can load the prepared script by:
+The script prepared for MySQL database is [`mysql_db.sql`](./mysql_db.sql). You can load the prepared script by following the steps below.
 
 #### Linux and Mac
 
@@ -206,11 +233,7 @@ USE onlinestore;
 SELECT * FROM product;
 ```
 
-6. You should see records on a table.
-
-### Using the prepared MySQL script
-
-Now you have loaded the script. To query the database and table created by the script, you will need to navigate to the MySQL console environment. You can do this by running the following command:
+6. You should see records on a table. Now you have loaded the script. To query the database and table created by the script, you will need to navigate to the MySQL console environment. You can do this by running the following command:
 
 ```
 mysql -u root
@@ -311,6 +334,32 @@ You can follow the following steps to load the prepared script:
 psql -U postgres
 ```
 
+
+1. Open the terminal, and navigate into the `chapter_02` folder of this repository
+
+2. Log in to the PostgreSQL console environment by running the following command:
+
+```
+psql -U postgres
+```
+3. In the console environment, create a database named `onlinestore` by running the following command:
+
+```
+CREATE DATABASE onlinestore;
+```
+
+4. In the console environment, use the database `onlinestore` by running the following command:
+
+```
+\c onlinestore
+```
+
+5. Now you are ready to load the prepared script. The script prepared for PostgreSQL database is [`postgresql_db.sql`](./postgresql_db.sql). In the console environment, run the following command:
+
+```
+\i postgresql_db.sql
+```
+
 #### Windows
 
 1. Open the "SQL Shell (psql)" from the Start Menu.
@@ -318,7 +367,7 @@ psql -U postgres
 2. Hit enter to use the default option and provide the password when asked for the default user. This is a correct interaction that leads to successful prompt:
 
 ```
-Server [localhost]:
+Server [localhost]: 
 Database [postgres]:
 Port [5432]:
 Username [postgres]:
@@ -331,8 +380,6 @@ Type "help" for help.
 
 postgres=#
 ```
-
-### Create the database
 
 3. In the console environment, create a database named `onlinestore` by running the following command:
 
@@ -370,3 +417,136 @@ INSERT 0 10
 ```
 
 In the same console environment, you can run any SQL queries you want, including the examples covered by Chapter 1. You can always quit the PostgreSQL console by typing `\q` and pressing `Enter`.
+
+## SQL server
+
+### Install and start SQL server on Mac
+
+Microsoft doesn’t support running an SQL server database directly on a Mac computer. You are recommended to run a Linux/Windows virtual machine first, and then install Oracle database on the virtual machine. [You can also use a Docker to achieve this goal](https://database.guide/how-to-install-sql-server-on-a-mac/).
+
+### Install and start SQL server on Windows
+
+You will need either the *Express edition* or the *Developer edition* for this purpose. Both versions are free, but the Express edition is limited in features. The Developer edition is also free but for development and testing purposes only, not for production.
+
+You can follow the steps below to install SQL server on Windows:
+
+1. Go to https://www.microsoft.com/en-us/sql-server/sql-server-downloads to download the installer for the edition you want.
+2. Run the installer. You will be presented with a few options like "Basic", "Custom", and "Download Media". The "Basic" option should be fine for most cases, which will install the default configuration of SQL Server. 
+3. After installation, you may need to install SQL Server Management Studio (SSMS) depending on if you want a graphical dashboard to manage SQL server. A link to download SSMS is usually provided at the end of the SQL Server installation process, or you can download it from https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16.
+4. After installation, you may need to configure SQL Server, which involves setting up user accounts, configuring network protocols, or setting database properties. All such tasks can be done through SQL Server Management Studio. When everything is wrapped up, you may need to restart your computer.
+
+### Install and start SQL server on Linux
+
+You are recommended to [follow these steps] (https://blog.devart.com/how-to-install-sql-server-on-linux-ubuntu.html) to install SQL server on a Linux machine. If you want a graphical interface to manage your SQL server, then dbForge Studio is a good option. The above link also provides instructions on how to install dbForge Studio on a Linux machine.
+
+### Load the prepared SQL server script
+
+The script prepared for MySQL database is [`sql_server_db.sql`](./sql_server_db.sql). You can load the prepared script by following the steps below.
+
+#### Linux
+
+You can follow the following steps to load the prepared script:
+
+1. Open the terminal, and navigate into the `chapter_01` folder of this repository
+2. You need to connect to your SQL Server instance via your terminal. If you haven't set up any users yet, you'll likely need to connect with the default sa (system administrator) user. Run the following command in your terminal. You will be prompted to enter the password for the sa user -- if you follow the above link to install and configure your SQL server, you have already set up the password for the sa user. Please use that password.
+```
+sqlcmd -S localhost -U SA
+```
+
+3. Once connected to the SQL Server, you can execute your script file (`sql_server_db.sql`) you can run it using the following command:
+```
+:r ./sql_server_db.sql
+```
+
+4. After the script has executed, you can verify that the database and tables were created successfully. Use SQL commands to check:
+
+```
+USE onlinestore;
+SELECT * FROM product;
+```
+
+#### Windows
+
+1. Open Microsoft SQL Server Management Studio (SSMS) and connect to the server. If you are using the Express edition, the server name should be `localhost\SQLEXPRESS`. If you are using the Developer edition, the server name should be `localhost`. You can use Windows Authentication to connect to the server.
+2. Navigate to File -> Open -> File, and load the script [`sql_server_db.sql`](./sql_server_db.sql).
+3. Click the Execute button to execute the script. You should see the following output in the Messages tab:
+
+```
+(1 row affected)
+(1 row affected)
+(10 rows affected)
+```
+4. You can verify that the product has been imported by running the following commands in a new query window (Ctrl + N):
+
+```
+USE onlinestore;
+SELECT * FROM product;
+```
+
+## Oracle database
+
+### Install and start Oracle database on Mac or Linux
+
+Oracle doesn’t support running an Oracle database directly on a Mac computer. [You are recommended to run a virtual machine first, and then install Oracle database on the virtual machine](https://database.guide/how-to-install-oracle-on-a-mac/).
+
+Installing Oracle on a Linux machine is complicated and doesn't serve the learning purposes. If you need to do so, you can follow the steps listed on [the Oracle database official website](https://docs.oracle.com/en/java/java-components/advanced-management-console/2.21/install-guide/oracle-database-installation-and-configuration-advanced-management-console.html#GUID-DF2557D8-C727-4243-8387-6154E5C1C36A) to install Oracle database on a Linux machine. Please note that you need to use a supported Linux distribution like Oracle Linux, Red Hat Enterprise Linux, CentOS, or SUSE Linux Enterprise Server, and will need to create an Oracle account to download the installer. 
+
+### Install and start Oracle database on Windows
+
+You can download the Oracle database installer from [Oracle website](https://www.oracle.com/database/technologies/oracle-database-software-downloads.html). Scroll down and download the free version of Oracle, e.g., Oracle Database 21c XE (Express Edition). If it is a zip, remember to unzip the file once downloaded.
+
+Follow the instructions to install Oracle database on your Windows machine:
+
+1. Run the installer (setup.msi). Setup a root password for the database and make a note of it. Then proceed with the installation instructions.
+2. After installation, you may need to install Oracle SQL Developer depending on if you want a graphical dashboard to manage Oracle database. A link to download Oracle SQL Developer is usually provided at the end of the Oracle database installation process, or you can download it from https://www.oracle.com/tools/downloads/sqldev-downloads.html.
+3. After installation, you may need to configure Oracle database, which involves setting up user accounts, configuring network protocols, or setting database properties. All such tasks can be done through Oracle SQL Developer. When everything is wrapped up, you may need to restart your computer.
+
+### Load the prepared Oracle script
+
+1. Open SQL developer and connect to the database. Look for the plus icon on the left hand side of the screen and click on it. Then select "New Database Connection". You will be presented with a window to enter the connection details.
+2. You can use the following information to connect to the database. If you are using the Express edition, the hostname should be `localhost`. If you are using the Developer edition, the hostname should be `localhost`. The port should be `1521`. The SID should be `XE`. The username is `sys` with role `SYSDBA` and the password that you've set during the installation. Also make sure to name the connection.
+3. After the connection opens, use File -> Open from the left hand side corner of the top menu and open the oracle_db.sql file. Then click on the green play button to execute the script ("Run Script" or use F5). You should see the following output in the Script Output tab:
+
+```
+PL/SQL procedure successfully completed.
+
+
+Table PRODUCT created.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+
+1 row inserted.
+
+```
+
+4. You can verify that the product has been imported by running the following commands in a new query window ("Unshared SQL Worksheet" or Ctrl + Shift + N):
+
+```
+SELECT * FROM product;
+``` 
